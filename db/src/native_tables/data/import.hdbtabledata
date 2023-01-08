@@ -17,6 +17,99 @@
                     "quote_character": "\""
                 }
             }
+        },
+        {
+            "target_table": "T_ENDERECOS",
+            "import_settings": {
+                "import_columns":[
+                    "CLIENTE_ID",
+                    "ENDERECO_ID",
+                    "LOGRADOURO",
+                    "COMPLEMENTO",
+                    "NUMERO",
+                    "CEP"
+                ],
+                "include_filter": []
+            },
+            "source_data": {
+                "data_type": "CSV",
+                "file_name": "T_ENDERECOS.csv",
+                "has_header": true,
+                "dialect": "HANA",
+                "type_config": {
+                    "delimiter": ",",
+                    "do_quote": true,
+                    "quote_character": "\""
+                }
+            }
+        },
+        {
+            "target_table": "T_FRETES",
+            "import_settings": {
+                "include_filter": []
+            },
+            "source_data": {
+                "data_type": "CSV",
+                "file_name": "T_FRETES.csv",
+                "has_header": true,
+                "dialect": "HANA",
+                "type_config": {
+                    "delimiter": ",",
+                    "do_quote": true,
+                    "quote_character": "\""
+                }
+            }
+        },
+        {
+            "target_table": "T_PRODUTOS",
+            "import_settings": {
+                "include_filter": []
+            },
+            "source_data": {
+                "data_type": "CSV",
+                "file_name": "T_PRODUTOS.csv",
+                "has_header": true,
+                "dialect": "HANA",
+                "type_config": {
+                    "delimiter": ",",
+                    "do_quote": true,
+                    "quote_character": "\""
+                }
+            }
+        },
+        {
+            "target_table": "T_ITENS_COMPRA",
+            "import_settings": {
+                "include_filter": []
+            },
+            "source_data": {
+                "data_type": "CSV",
+                "file_name": "T_ITENS_COMPRA.csv",
+                "has_header": true,
+                "dialect": "HANA",
+                "type_config": {
+                    "delimiter": ",",
+                    "do_quote": true,
+                    "quote_character": "\""
+                }
+            }
+        },
+        {
+            "target_table": "T_PEDIDOS_COMPRA",
+            "import_settings": {
+                "include_filter": []
+            },
+            "source_data": {
+                "data_type": "CSV",
+                "file_name": "T_PEDIDOS_COMPRA.csv",
+                "has_header": true,
+                "dialect": "HANA",
+                "type_config": {
+                    "delimiter": ",",
+                    "do_quote": true,
+                    "quote_character": "\""
+                }
+            }
         }
     ]
 }
