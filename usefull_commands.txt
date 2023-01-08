@@ -1,0 +1,54 @@
+Util terminal commands
+
+Module responsibile for HANA useful commands
+	npm instal -g hana-cli
+
+See the status and links for the HANA CLOUD Database Instance named my_hana_db
+	hana-cli hc my_hana_db
+
+Start the HANA CLOUD Instance my_hana_db
+	hana-cli hcstart my_hana_db
+
+Module responsible for CAP enablement of the workspace
+	npm install -g @sap/cds-dk
+
+CAP structure initialization
+	cds init --add nodejs,hana,mta
+
+Extracting and formatting the enviroment variables to json (default-env.json)
+	hana-cli copy2DefaultEnv
+
+Inspection Command on tables already deployed (Default-env.json version)
+	hana-cli inspectTable TREINAMENTO01_1 OPENSAP_MD_EMPLOYEES -o cds
+
+BIND the hdi container for development to the application (cdsrc-private.json)
+	cds bind -2 treinamento-01-dev-local:local-key
+Inspection Command on tables already deployed (CDS BIND Version - need to bind the service-key for the targeted service)
+	cds bind --exec -- hana-cli inspectTable TREINAMENTO01_1 OPENSAP_MD_EMPLOYEES -o cds
+
+create xs-security.json based on cds restrictions
+	cds compile srv --to xsuaa > xs-security.json
+
+Creating xsuaa service based on the xs-security.json
+	cf create-service xsuaa application treinamento-01-auth -c xs-security.json
+
+Creating a service key for the above service
+	cf create-service-key treinamento-01-auth default
+
+Bind the Application to the xsuaa service (locally)
+	cds bind -2 treinamento-01-auth:default
+
+Run with cloud bindings:
+	cds watch --profile hybrid
+
+test the approuter locally but binding it to the xsuaa real service credentials
+	cds bind --exec -- npm start --prefix app
+
+useful to see on the fly info about the roles you are assigned
+https://subaccount-pedro-avss4wzl.authentication.us10.hana.ondemand.com/config?action=who
+
+undeploy the application with all its dependencies
+	cf undeploy treinamento-01 -f --delete-services --delete-service-keys
+	
+undeploy hdbtabledata but keeping the data in the database
+	node node_modules/@sap/hdi-deploy/deploy.js --undeploy src/native_tables/data/import.hdbtabledata --path-parameter src/native_tables/data/import.hdbtabledata:skip_data_deletion=true
