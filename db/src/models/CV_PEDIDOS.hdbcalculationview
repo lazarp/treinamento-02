@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_PEDIDOS" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CV_PEDIDOS.hdbcalculationview"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="CV_ITENS">
+    <resourceUri>CV_ITENS</resourceUri>
+  </DataSource>
+  <DataSource id="T_ENDERECOS">
+    <resourceUri>T_ENDERECOS</resourceUri>
+  </DataSource>
+  <DataSource id="T_FRETES">
+    <resourceUri>T_FRETES</resourceUri>
+  </DataSource>
+  <DataSource id="T_PEDIDOS_COMPRA">
+    <resourceUri>T_PEDIDOS_COMPRA</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="PR_ITENS">
+    <viewAttributes>
+      <viewAttribute id="PEDIDO_ID"/>
+      <viewAttribute id="ITEM_ID"/>
+      <viewAttribute id="PRODUTO_ID"/>
+      <viewAttribute id="QUANTIDADE"/>
+      <viewAttribute id="PESO_ITEM"/>
+      <viewAttribute id="PRECO_ITEM"/>
+      <viewAttribute id="CUSTO_ITEM"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="CV_ITENS"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="PR_ENDERECOS">
+    <viewAttributes>
+      <viewAttribute id="CLIENTE_ID"/>
+      <viewAttribute id="ENDERECO_ID"/>
+      <viewAttribute id="CEP"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="T_ENDERECOS"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="PR_FRETES">
+    <viewAttributes>
+      <viewAttribute id="CEP"/>
+      <viewAttribute id="FRETE_UNIDADE_PESO"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="T_FRETES"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="PR_PEDIDOS">
+    <viewAttributes>
+      <viewAttribute id="PEDIDO_ID"/>
+      <viewAttribute id="CLIENTE_ID"/>
+      <viewAttribute id="ENDERECO_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="T_PEDIDOS_COMPRA"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="AGG_ITENS_POR_PEDIDO">
+    <descriptions>
+      <comment text="Agregando Peso, Preço e Custo dos itens por pedido."/>
+    </descriptions>
+    <viewAttributes>
+      <viewAttribute id="PEDIDO_ID"/>
+      <viewAttribute id="PESO_PEDIDO" aggregationType="sum"/>
+      <viewAttribute id="PRECO_PEDIDO" aggregationType="sum"/>
+      <viewAttribute id="CUSTO_PEDIDO" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="PR_ITENS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PESO_PEDIDO" source="PESO_ITEM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRECO_PEDIDO" source="PRECO_ITEM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTO_PEDIDO" source="CUSTO_ITEM"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="JN_ENDERECOS_FRETES" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="CLIENTE_ID"/>
+      <viewAttribute id="ENDERECO_ID"/>
+      <viewAttribute id="CEP"/>
+      <viewAttribute id="FRETE_UNIDADE_PESO"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="PR_ENDERECOS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLIENTE_ID" source="CLIENTE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ENDERECO_ID" source="ENDERECO_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CEP" source="CEP"/>
+    </input>
+    <input node="PR_FRETES">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FRETE_UNIDADE_PESO" source="FRETE_UNIDADE_PESO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CEP" source="CEP"/>
+    </input>
+    <joinAttribute name="CEP"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="JN_PEDIDOS_FRETES" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="PEDIDO_ID"/>
+      <viewAttribute id="FRETE_UNIDADE_PESO"/>
+      <viewAttribute hidden="true" id="JOIN$CLIENTE_ID$CLIENTE_ID"/>
+      <viewAttribute hidden="true" id="JOIN$ENDERECO_ID$ENDERECO_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="PR_PEDIDOS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PEDIDO_ID" source="PEDIDO_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CLIENTE_ID$CLIENTE_ID" source="CLIENTE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ENDERECO_ID$ENDERECO_ID" source="ENDERECO_ID"/>
+    </input>
+    <input node="JN_ENDERECOS_FRETES">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FRETE_UNIDADE_PESO" source="FRETE_UNIDADE_PESO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CLIENTE_ID$CLIENTE_ID" source="CLIENTE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ENDERECO_ID$ENDERECO_ID" source="ENDERECO_ID"/>
+    </input>
+    <joinAttribute name="JOIN$CLIENTE_ID$CLIENTE_ID"/>
+    <joinAttribute name="JOIN$ENDERECO_ID$ENDERECO_ID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="JN_FRETE" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="PEDIDO_ID"/>
+      <viewAttribute id="PESO_PEDIDO"/>
+      <viewAttribute id="PRECO_PEDIDO"/>
+      <viewAttribute id="CUSTO_PEDIDO"/>
+      <viewAttribute id="FRETE_UNIDADE_PESO"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="AGG_ITENS_POR_PEDIDO">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PEDIDO_ID" source="PEDIDO_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PESO_PEDIDO" source="PESO_PEDIDO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRECO_PEDIDO" source="PRECO_PEDIDO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTO_PEDIDO" source="CUSTO_PEDIDO"/>
+    </input>
+    <input node="JN_PEDIDOS_FRETES">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FRETE_UNIDADE_PESO" source="FRETE_UNIDADE_PESO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PEDIDO_ID" source="PEDIDO_ID"/>
+    </input>
+    <joinAttribute name="PEDIDO_ID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="PR_CALCULATIONS">
+    <viewAttributes>
+      <viewAttribute id="PEDIDO_ID"/>
+      <viewAttribute id="PESO_PEDIDO"/>
+      <viewAttribute id="PRECO_PEDIDO"/>
+      <viewAttribute id="CUSTO_PEDIDO"/>
+      <viewAttribute id="FRETE_UNIDADE_PESO"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_FRETE_PEDIDO" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>ROUND( (&quot;FRETE_UNIDADE_PESO&quot;*&quot;PESO_PEDIDO&quot;), 2)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_VALOR_FINAL_PEDIDO" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>ROUND( (&quot;PRECO_PEDIDO&quot;+&quot;CC_FRETE_PEDIDO&quot;), 2)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_LUCRO_PEDIDO" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>ROUND( (&quot;PRECO_PEDIDO&quot;-&quot;CUSTO_PEDIDO&quot;), 2)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="CC_MARGEM_LUCRO" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>ROUND( ( (&quot;CC_LUCRO_PEDIDO&quot;/&quot;PRECO_PEDIDO&quot;) * 100), 2)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="JN_FRETE"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="PR_CALCULATIONS">
+  <attributes>
+    <attribute id="PEDIDO_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PEDIDO_ID"/>
+      <keyMapping columnObjectName="PR_CALCULATIONS" columnName="PEDIDO_ID"/>
+    </attribute>
+    <attribute id="FRETE_PEDIDO" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_FRETE_PEDIDO"/>
+      <keyMapping columnObjectName="PR_CALCULATIONS" columnName="CC_FRETE_PEDIDO"/>
+    </attribute>
+    <attribute id="VALOR_FINAL_PEDIDO" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_VALOR_FINAL_PEDIDO"/>
+      <keyMapping columnObjectName="PR_CALCULATIONS" columnName="CC_VALOR_FINAL_PEDIDO"/>
+    </attribute>
+    <attribute id="LUCRO_PEDIDO" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_LUCRO_PEDIDO"/>
+      <keyMapping columnObjectName="PR_CALCULATIONS" columnName="CC_LUCRO_PEDIDO"/>
+    </attribute>
+    <attribute id="MARGEM_LUCRO" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CC_MARGEM_LUCRO"/>
+      <keyMapping columnObjectName="PR_CALCULATIONS" columnName="CC_MARGEM_LUCRO"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="400.59385425392685" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="PR_ITENS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="289.7040621368427" y="715.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="AGG_ITENS_POR_PEDIDO" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="331.239760963672" y="529.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="PR_ENDERECOS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="786.8973970136335" y="749.9999964237213"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="PR_FRETES" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="1081.8973970136335" y="749.9999964237213"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="JN_ENDERECOS_FRETES" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="910.8476631470726" y="610.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="PR_ENDERECOS" modelObjectNameSpace="JN_ENDERECOS_FRETES" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="165.4599609375"/>
+    </shape>
+    <shape modelObjectName="PR_FRETES" modelObjectNameSpace="JN_ENDERECOS_FRETES" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="214.36376953125"/>
+    </shape>
+    <shape expanded="true" modelObjectName="JN_FRETE" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="480.59385425392685" y="416"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="AGG_ITENS_POR_PEDIDO" modelObjectNameSpace="JN_FRETE" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="JN_PEDIDOS_FRETES" modelObjectNameSpace="JN_FRETE" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="368" y="33"/>
+      <rectangleSize width="214.36376953125"/>
+    </shape>
+    <shape expanded="true" modelObjectName="PR_PEDIDOS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="637" y="618.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="JN_PEDIDOS_FRETES" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="771.6666666666666" y="522.3333321412404"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="PR_PEDIDOS" modelObjectNameSpace="JN_PEDIDOS_FRETES" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="165.4599609375"/>
+    </shape>
+    <shape modelObjectName="JN_ENDERECOS_FRETES" modelObjectNameSpace="JN_PEDIDOS_FRETES" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="216.0390625"/>
+    </shape>
+    <shape expanded="true" modelObjectName="PR_CALCULATIONS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="401" y="268"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
