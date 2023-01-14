@@ -76,7 +76,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CUSTO_PEDIDO" source="CUSTO_ITEM"/>
     </input>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="JN_ENDERECOS_FRETES" cardinality="CN_N" joinType="inner">
+  <calculationView xsi:type="Calculation:JoinView" id="JN_ENDERECOS_FRETES" cardinality="CN_N" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="CLIENTE_ID"/>
       <viewAttribute id="ENDERECO_ID"/>
@@ -95,7 +95,7 @@
     </input>
     <joinAttribute name="CEP"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="JN_PEDIDOS_FRETES" cardinality="CN_N" joinType="inner">
+  <calculationView xsi:type="Calculation:JoinView" id="JN_PEDIDOS_FRETES" cardinality="CN_N" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="PEDIDO_ID"/>
       <viewAttribute id="FRETE_UNIDADE_PESO"/>
@@ -116,7 +116,7 @@
     <joinAttribute name="JOIN$CLIENTE_ID$CLIENTE_ID"/>
     <joinAttribute name="JOIN$ENDERECO_ID$ENDERECO_ID"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="JN_FRETE" cardinality="CN_N" joinType="inner">
+  <calculationView xsi:type="Calculation:JoinView" id="JN_FRETE" cardinality="CN_N" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="PEDIDO_ID"/>
       <viewAttribute id="PESO_PEDIDO"/>
@@ -193,41 +193,57 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="400.59385425392685" y="112"/>
+      <upperLeftCorner x="400" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="PR_ITENS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="289.7040621368427" y="715.9999976158142"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="AGG_ITENS_POR_PEDIDO" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="331.239760963672" y="529.9999988079071"/>
+      <upperLeftCorner x="289" y="715"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="PR_ENDERECOS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="786.8973970136335" y="749.9999964237213"/>
+      <upperLeftCorner x="781" y="820"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="PR_FRETES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="1081.8973970136335" y="749.9999964237213"/>
+      <upperLeftCorner x="1057" y="820"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="PR_PEDIDOS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="637" y="644"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="AGG_ITENS_POR_PEDIDO" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="331" y="529"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="JN_ENDERECOS_FRETES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="910.8476631470726" y="610.9999976158142"/>
+      <upperLeftCorner x="941" y="689"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="PR_ENDERECOS" modelObjectNameSpace="JN_ENDERECOS_FRETES" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="165.4599609375"/>
+      <rectangleSize width="165"/>
     </shape>
     <shape modelObjectName="PR_FRETES" modelObjectNameSpace="JN_ENDERECOS_FRETES" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="214.36376953125"/>
+      <rectangleSize width="214"/>
+    </shape>
+    <shape expanded="true" modelObjectName="JN_PEDIDOS_FRETES" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="771" y="522"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="PR_PEDIDOS" modelObjectNameSpace="JN_PEDIDOS_FRETES" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="165"/>
+    </shape>
+    <shape modelObjectName="JN_ENDERECOS_FRETES" modelObjectNameSpace="JN_PEDIDOS_FRETES" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="216"/>
     </shape>
     <shape expanded="true" modelObjectName="JN_FRETE" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="480.59385425392685" y="416"/>
+      <upperLeftCorner x="480" y="416"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="AGG_ITENS_POR_PEDIDO" modelObjectNameSpace="JN_FRETE" modelObjectType="JoinNodeInput">
@@ -236,23 +252,7 @@
     </shape>
     <shape modelObjectName="JN_PEDIDOS_FRETES" modelObjectNameSpace="JN_FRETE" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="368" y="33"/>
-      <rectangleSize width="214.36376953125"/>
-    </shape>
-    <shape expanded="true" modelObjectName="PR_PEDIDOS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="637" y="618.9999976158142"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape expanded="true" modelObjectName="JN_PEDIDOS_FRETES" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="771.6666666666666" y="522.3333321412404"/>
-      <rectangleSize height="30" width="160"/>
-    </shape>
-    <shape modelObjectName="PR_PEDIDOS" modelObjectNameSpace="JN_PEDIDOS_FRETES" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="165.4599609375"/>
-    </shape>
-    <shape modelObjectName="JN_ENDERECOS_FRETES" modelObjectNameSpace="JN_PEDIDOS_FRETES" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="216.0390625"/>
+      <rectangleSize width="214"/>
     </shape>
     <shape expanded="true" modelObjectName="PR_CALCULATIONS" modelObjectNameSpace="CalculationView">
       <upperLeftCorner x="401" y="268"/>
