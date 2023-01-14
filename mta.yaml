@@ -15,8 +15,15 @@ modules:
     path: gen/srv
     parameters:
       buildpack: nodejs_buildpack
+      disk-quota: 1024M
+      memory: 512M
     build-parameters:
       builder: npm-ci
+      ignore:
+        - default-*.json
+        - .env
+        - "*node_modules*"
+        - package-lock.json
     provides:
       - name: srv-api # required by consumers of CAP services (e.g. approuter)
         properties:
@@ -27,8 +34,16 @@ modules:
   - name: db
     type: hdb
     path: gen/db
+    build-parameters:
+      ignore:
+        - default-*.json
+        - .env
+        - "*node_modules*"
+        - package-lock.json
     parameters:
       buildpack: nodejs_buildpack
+      memory: 256M
+      disk-quota: 1024M
     requires:
       - name: hdi_db
         properties:
