@@ -15,7 +15,7 @@
     "node": "^16"
   },
   "scripts": {
-    "start": "cds run"
+    "start": "cds serve gen/srv/csn.json"
   },
   "cds": {
     "build":{
