@@ -1,0 +1,40 @@
+GET http://localhost:4004/catalog/
+
+###
+GET http://localhost:4004/v2/catalog/
+
+###
+GET http://localhost:4004/catalog/Clientes(1)
+
+###
+# Deletando cliente 1
+DELETE http://localhost:4004/catalog/Clientes(1)
+
+###
+GET http://localhost:4004/catalog/Clientes(1)
+
+###
+# Inserindo Cliente 1
+POST http://localhost:4004/catalog/Clientes
+Content-Type: application/json
+
+{
+   "CLIENTE_ID": 1,
+    "NOME": "Dori Checo",
+    "EMAIL": "dcheco0@exblog.jp",
+    "FONE": "6845209461",
+    "DESDE": "2022-10-01" 
+}
+
+###
+# Alterando Cliente 1
+PUT http://localhost:4004/catalog/Clientes(1)
+Content-Type: application/json
+
+{
+    "CLIENTE_ID": 1,
+    "NOME": "Dori Pacheco",
+    "EMAIL": "dcheco0@exblog.jp",
+    "FONE": "6845209461",
+    "DESDE": "2022-10-01" 
+}
